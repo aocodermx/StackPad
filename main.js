@@ -11,12 +11,13 @@ let mainWindow
 
 function createWindow ( ) {
   mainWindow = new BrowserWindow ( { width: 800, height: 600 } )
-
   mainWindow.loadURL ( url.format ( {
     pathname: path.join ( __dirname, 'application', 'StackPad.html' ),
     protocol: 'file:',
     slashes : true
   } ) )
+
+  mainWindow.maximize ( )
 
   mainWindow.webContents.openDevTools ( )
 
@@ -40,6 +41,3 @@ app.on ( 'activate', function ( ) {
     createWindow ( )
   }
 } )
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
