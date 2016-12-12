@@ -5,10 +5,20 @@
     <title>StackPad</title>
   </head>
   <body>
-    <p>A body</p>
-  </body>
 
-  <script>
-    require ( './js/StackPad.js' )
-  </script>
+
+    <!-- APPLICATION TEMPLATES -->
+
+    <script type="text/template" id="template-stackpad">
+      <p>Working from {{ home }} directory.</p>
+      <p>Here draw some stats.</p>
+      <button id="new-stack">Add New Stack</button>
+    </script>
+
+    <!-- APPLICATION TEMPLATES ENDS -->
+
+
+    <!-- APPLICATION COMPONENTS -->
+    <script src="js/StackPad.js"></script>
+  </body>
 </html>

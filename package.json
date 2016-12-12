@@ -22,8 +22,9 @@
     "chai": "^3.5.0",
     "chai-fs": "^1.0.0",
     "electron": "^1.4.1",
+    "jquery": "^3.1.1",
+    "jsdom": "^9.8.3",
     "mocha": "^3.2.0",
-    "underscore": "^1.8.3",
-    "zepto": "^1.2.0"
+    "underscore": "^1.8.3"
   }
 }

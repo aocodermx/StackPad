@@ -3,27 +3,6 @@ const path = require ( 'path' );
 const fs   = require ( 'fs' );
 const os   = require ( 'os' );
 
-exports.mStackPad = Backbone.Model.extend ( {
-    defaults: {
-        home: path.join ( os.homedir ( ), 'StackPad' )
-    },
-
-    initialize: function ( ) {
-        fs.mkdir ( this.get ( 'home' ), function ( error ) {
-            if ( error !== null ) {
-                console.log ( 'error creating home directory. ', error.message );
-            }
-        } );
-    },
-
-    validate: function ( attributes ) {
-        if ( attributes.home === undefined) {
-            return 'home directory is missing.';
-        }
-    },
-
-} );
-
 
 exports.mStack = Backbone.Model.extend ( {
     defaults: {
