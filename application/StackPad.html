@@ -1,24 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <title>StackPad</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
   </head>
-  <body>
+  <body class="container">
 
+    <br>
+
+    <div class="row">
+    
+
+      <div id="stacklist-container" class="col-xs-3 container-fluid">
+
+      </div>
+
+      <div id="itemlist-container" class="col-xs-3">
+
+      </div>
+
+      <div id="entrylist-container" class="col-xs-3">
+
+      </div>
+    </div>
 
     <!-- APPLICATION TEMPLATES -->
 
     <script type="text/template" id="template-stackpad">
-      <p>Working from {{ home }} directory.</p>
-      <p>Here draw some stats.</p>
-      <button id="new-stack">Add New Stack</button>
+      <div>
+        <p>Working from directory {{ home }}.</p>
+      </div>
+
+      <div id="stacklistview-container">
+
+      </div>
+    </script>
+    <!-- APPLICATION TEMPLATES ENDS -->
+
+    <!-- STACK TEMPLATES START -->
+    <script type="text/template" id="template-stacklist">
+      <div>
+        <div class="form-group">
+          <input id="name" type="text" class="form-control" placeholder="Name" />
+        </div>
+        <div class="form-group">
+          <textarea id="description" class="form-control" rows="2" placeholder="Description"></textarea>
+        </div>
+        <button class="add btn btn-primary btn-block">Add Stack</button>
+      </div>
+
+      <hr/>
+
+      <div id="list" class="list-group">
+      </div>
     </script>
 
-    <!-- APPLICATION TEMPLATES ENDS -->
+    <script type="text/template" id="template-stack">
+      <h4 class="list-group-item-heading">{{ name }}</h4>
+      <p class="list-group-item-text">{{ description }}</p>
+    </script>
+    <!-- STACK TEMPLATES STARTS -->
+    
 
 
     <!-- APPLICATION COMPONENTS -->
+    <script>
+      var jQuery = require ( 'jquery' ); // WTF!
+    </script>
+    <script src="js/lib/bootstrap.min.js"></script>
     <script src="js/StackPad.js"></script>
   </body>
 </html>

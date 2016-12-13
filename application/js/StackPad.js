@@ -1,64 +1,38 @@
+
+// Backbone dependency setup
 const Backbone = require ( 'backbone' );
-const _    = require ( 'underscore' );
-const $    = require ( 'jquery' );
-Backbone.$ = $;
-
-
-const path = require ( 'path' );
-const fs   = require ( 'fs' );
-const os   = require ( 'os' );
-
+const _        = require ( 'underscore' );
+const $        = require ( 'jquery' );
+Backbone.$     = $;
 
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
+// Other dependencies
+const os   = require ( 'os' );
+const path = require ( 'path' );
 
-var StackPadModel = Backbone.Model.extend ( {
-
-    defaults: {
-        home: path.join ( os.homedir ( ), 'StackPad' )
-    },
-
-    initialize: function ( ) {
-        fs.mkdir ( this.get ( 'home' ), function ( error ) {
-            if ( error !== null ) {
-                console.log ( 'error creating home directory. ', error.message );
-            }
-        } );
-    },
-
-    validate: function ( attributes ) {
-        if ( attributes.home === undefined) {
-            return 'home directory is missing.';
-        }
-    },
-
-} );
+// Application components
+const Stack = require ( './js/Stack.js' );
 
 
 var StackPadView = Backbone.View.extend ( {
 
     el: 'body',
 
-    model: new StackPadModel ( ),
-
     template: _.template ( $( '#template-stackpad' ).html ( ) ),
 
     initialize: function ( options ) {
         this.options = options || {};
-        this.render ( );
+        this.options.home = path.join ( os.homedir ( ), 'StackPad' );
+
+        this.stackListView = new Stack.ListView ( );
+
+        this.render ( );  
     },
 
     render: function ( ) {
-        this.$el.html ( this.template ( this.model.attributes ) );
+        this.stackListView.render ( );
         return this;
-    },
-
-    events: {
-        'click #new-stack': 'onClickNewStack'
-    },
-
-    onClickNewStack: function ( ) {
-        console.log ( 'New stack should be created.' );
     }
 
 } );
