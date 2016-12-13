@@ -12,7 +12,8 @@ const os   = require ( 'os' );
 const path = require ( 'path' );
 
 // Application components
-const Stack = require ( './js/Stack.js' );
+const Stack = require ( './js/StackList.js' );
+const Item  = require ( './js/ItemList.js' );
 
 
 var StackPadView = Backbone.View.extend ( {
@@ -25,7 +26,10 @@ var StackPadView = Backbone.View.extend ( {
         this.options = options || {};
         this.options.home = path.join ( os.homedir ( ), 'StackPad' );
 
+        // StackListView component.
         this.stackListView = new Stack.ListView ( );
+        Backbone.on ( 'stack:selected', this.onStackSelected );
+        Backbone.on ( 'item:selected', this.onItemSelected );
 
         this.render ( );  
     },
@@ -33,6 +37,17 @@ var StackPadView = Backbone.View.extend ( {
     render: function ( ) {
         this.stackListView.render ( );
         return this;
+    },
+
+    onStackSelected: function ( stackname ) {
+        console.log ( 'Selected Stack:', stackname, 'A new ItemListView should be created.' );
+
+        this.itemListView = new Item.ListView ( );
+        this.itemListView.render ( );
+    },
+
+    onItemSelected: function ( itemname ) {
+        console.log ( 'Selected Item:', itemname, 'A new EntryListView should be created.');
     }
 
 } );

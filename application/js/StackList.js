@@ -7,67 +7,73 @@ Backbone.$     = $;
 
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
-// Other dependencies
-const os   = require ( 'os' );
-const path = require ( 'path' );
-
-// Application components
-
 
 var StackModel = Backbone.Model.extend ( {
+
     defaults: {
         name       : 'New Stack',
         description: 'Simple Stack'
-    },
-    validate: function ( attributes ) {
-        if ( attributes.name === undefined ) {
-            return 'stack name required.'
-        }
-
-        if ( attributes.description === undefined ) {
-            return 'stack description required.';
-        }
     }
+
 } );
 
 
 var StackView = Backbone.View.extend ( {
+
     tagName: 'a',
+
     className: 'list-group-item',
+
     attributes: {
         href: '#'
     },
+
     template: _.template ( $('#template-stack').html ( ) ),
+
     events: {
         'click h4': 'onClickStack',
         'click p' : 'onClickStack'
     },
+
+    model: StackModel,
+
     initialize: function ( options ) {
-        this.options = options || {}
+        this.options = options || { };
         this.render ( );
     },
+
     render: function ( ) {
         this.$el.html ( this.template ( this.model.attributes ) );
         return this;
     },
+
     onClickStack: function ( event ) {
-        $( event.currentTarget ).parent ( ).toggleClass ( 'active' );
+        this.$el.toggleClass ( 'active' );
+        Backbone.trigger ( 'stack:selected', this.model.get ( 'name' ) );
     }
+
 } );
 
 var StackListCollection = Backbone.Collection.extend ( {
+
     model: StackModel
+
 } );
 
 exports.ListView = Backbone.View.extend ( {
+
     el: '#stacklist-container',
+
     template: _.template ( $('#template-stacklist').html ( ) ),
+
     events: {
         'click .add': 'onClickAdd'
     },
+
     initialize: function ( ) {
         this.collection = new StackListCollection ( );
     },
+
     onClickAdd: function ( ) {
         var name = this.$( '#name' ).val ( );
         var desc = this.$( '#description' ).val ( );
@@ -80,6 +86,7 @@ exports.ListView = Backbone.View.extend ( {
         this.collection.add ( newStack );
         this.render ( );
     },
+
     render: function ( ) {
         this.$el.html ( this.template ( {} ) );
 
@@ -89,5 +96,6 @@ exports.ListView = Backbone.View.extend ( {
         }, this );
 
         return this;
-    },
+    }
+
 } );

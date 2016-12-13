@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">
   </head>
-  <body class="container">
+  <body class="container-fluid">
 
     <br>
 
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <!-- APPLICATION TEMPLATES -->
+    <!-- APPLICATION TEMPLATE START-->
 
     <script type="text/template" id="template-stackpad">
       <div>
@@ -41,7 +41,7 @@
     </script>
     <!-- APPLICATION TEMPLATES ENDS -->
 
-    <!-- STACK TEMPLATES START -->
+    <!-- STACK TEMPLATES STARTS -->
     <script type="text/template" id="template-stacklist">
       <div>
         <div class="form-group">
@@ -50,7 +50,9 @@
         <div class="form-group">
           <textarea id="description" class="form-control" rows="2" placeholder="Description"></textarea>
         </div>
-        <button class="add btn btn-primary btn-block">Add Stack</button>
+        <div class="form-group">
+          <button class="add btn btn-primary btn-block">Add Stack</button>
+        </div>
       </div>
 
       <hr/>
@@ -63,7 +65,29 @@
       <h4 class="list-group-item-heading">{{ name }}</h4>
       <p class="list-group-item-text">{{ description }}</p>
     </script>
-    <!-- STACK TEMPLATES STARTS -->
+    <!-- STACK TEMPLATES ENDS -->
+
+    <!-- ITEM TEMPLATES STARTS -->
+    <script type="text/template" id="template-itemlist">
+      <div>
+        <div class="form-group">
+          <input id="name" type="text" class="form-control" placeholder="Name" />
+        </div>
+        <div class="form-group">
+          <button class="add btn btn-primary btn-block">Add Item</button>
+        </div>
+      </div>
+
+      <hr/>
+
+      <div id="list" class="list-group">
+      </div>
+    </script>
+
+    <script type="text/template" id="template-item">
+      <p class="list-group-item-text">{{ name }}</p>
+    </script>
+    <!-- ITEM TEMPLATES ENDS -->
     
 
 
