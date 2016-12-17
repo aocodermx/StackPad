@@ -14,6 +14,7 @@ const path = require ( 'path' );
 // Application components
 const Stack = require ( './js/StackList.js' );
 const Item  = require ( './js/ItemList.js' );
+const Entry = require ( './js/EntryList.js' );
 
 
 var StackPadView = Backbone.View.extend ( {
@@ -48,6 +49,9 @@ var StackPadView = Backbone.View.extend ( {
 
     onItemSelected: function ( itemname ) {
         console.log ( 'Selected Item:', itemname, 'A new EntryListView should be created.');
+
+        this.entryListView = new Entry.ListView ( );
+        this.entryListView.render ( );
     }
 
 } );

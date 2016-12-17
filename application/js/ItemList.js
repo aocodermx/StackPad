@@ -1,4 +1,3 @@
-
 // Backbone dependency setup
 const Backbone = require ( 'backbone' );
 const _        = require ( 'underscore' );

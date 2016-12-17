@@ -13,19 +13,9 @@
     <br>
 
     <div class="row">
-    
-
-      <div id="stacklist-container" class="col-xs-3 container-fluid">
-
-      </div>
-
-      <div id="itemlist-container" class="col-xs-3">
-
-      </div>
-
-      <div id="entrylist-container" class="col-xs-3">
-
-      </div>
+      <div id="stacklist-container" class="col-xs-3 container-fluid"></div>
+      <div id="itemlist-container" class="col-xs-3"></div>
+      <div id="entrylist-container" class="col-xs-3"></div>
     </div>
 
     <!-- APPLICATION TEMPLATE START-->
@@ -88,6 +78,22 @@
       <p class="list-group-item-text">{{ name }}</p>
     </script>
     <!-- ITEM TEMPLATES ENDS -->
+
+
+    <!-- ENTRY TEMPLATES STARTS -->
+
+    <script type="text/template" id="template-entrylist">
+      <button class="add btn btn-primary btn-block">Add Entry</button>
+      <div id="list">
+      </div>
+    </script>
+
+    <script type="text/template" id="template-entry">
+      <h3>{{ title }}</h3>
+      <div>{{ body }}</div>
+    </script>
+
+    <!-- ENTRY TEMPLATES ENDS -->
     
 
 
