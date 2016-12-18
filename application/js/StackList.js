@@ -4,6 +4,7 @@ const Backbone = require ( 'backbone' );
 const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
+Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
 
 
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
@@ -57,7 +58,11 @@ var StackView = Backbone.View.extend ( {
 
 var StackListCollection = Backbone.Collection.extend ( {
 
-    model: StackModel
+    model: StackModel,
+
+    initialize: function ( ) {
+        this.localStorage = new Backbone.LocalStorage ( 'StackListCollectionPersist' );
+    }
 
 } );
 
@@ -70,6 +75,7 @@ var StackListView = Backbone.View.extend ( {
 
     initialize: function ( ) {
         this.collection = new StackListCollection ( );
+        this.collection.fetch ( );
     },
 
     render: function ( ) {
@@ -78,6 +84,7 @@ var StackListView = Backbone.View.extend ( {
         this.collection.each ( function ( item ) {
             var stackView = new StackView ( { model: item } );
             this.$( '#list' ).append ( stackView.render().el );
+            item.save ( );
         }, this );
 
         return this;

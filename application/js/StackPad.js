@@ -65,7 +65,7 @@ var StackPadView = Backbone.View.extend ( {
     },
 
     onItemSelected: function ( item ) {
-        console.log ( 'Selected Item:', item, 'A new EntryListView should be created.');
+        console.log ( 'Selected Item:', item.get ( 'name' ), 'A new EntryListView should be created.');
         this.entryListView.changeItem ( item );
 
         this.$( '#itemlist-container' ).addClass ( 'hide' );

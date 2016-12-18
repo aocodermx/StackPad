@@ -49,7 +49,11 @@ var EntryView = Backbone.View.extend ( {
 
 var EntryListCollection = Backbone.Collection.extend ( {
 
-    model: EntryModel
+    model: EntryModel,
+
+    initialize: function ( models, options ) {
+        this.localStorage = new Backbone.LocalStorage ( options.item + 'EntryList' );
+    }
 
 } );
 
@@ -62,8 +66,9 @@ exports.ListView = Backbone.View.extend ( {
 
     model: Item.Model,
 
-    initialize: function ( ) {
-        this.collection = new EntryListCollection ( );
+    initialize: function ( options ) {
+        this.options = options || { };
+        this.collection = new EntryListCollection ( [], { item: 'default' } );
     },
 
     render: function ( ) {
@@ -72,13 +77,17 @@ exports.ListView = Backbone.View.extend ( {
         this.collection.each ( function ( entry ) {
             var entryView = new EntryView ( { model: entry } );
             this.$( '#list' ).append ( entryView.render ( ).el );
+            entry.save ( );
         }, this );
 
         return this;
     },
 
     changeItem: function ( model ) {
+        console.log ( 'Change to Item: ', model.get ( 'name' ) )
         this.model.set ( model.toJSON ( ) );
+        this.collection = new EntryListCollection ( [], { item: model.get ( 'name' ) } );
+        this.collection.fetch ( );
         this.render ( );
     },
 

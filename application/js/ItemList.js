@@ -3,6 +3,7 @@ const Backbone = require ( 'backbone' );
 const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
+Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
 
 
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
@@ -57,7 +58,11 @@ var ItemView = Backbone.View.extend ( {
 
 var ItemListCollection = Backbone.Collection.extend ( {
 
-    model: ItemModel
+    model: ItemModel,
+
+    initialize: function ( models, options ) {
+        this.localStorage = new Backbone.LocalStorage ( options.stack + 'ItemList' );
+    }
 
 } );
 
@@ -72,7 +77,7 @@ var ItemListView = Backbone.View.extend ( {
 
     initialize: function ( options ) {
         this.options = options || { };
-        this.collection = new ItemListCollection ( );
+        this.collection = new ItemListCollection ( [], { stack: 'default' } );
     },
 
     render: function ( ) {
@@ -81,6 +86,7 @@ var ItemListView = Backbone.View.extend ( {
         this.collection.each ( function ( item ) {
             var itemView = new ItemView ( { model: item } );
             this.$( '#list' ).append ( itemView.render ( ).el );
+            item.save ( );
         }, this );
 
         return this;
@@ -88,6 +94,8 @@ var ItemListView = Backbone.View.extend ( {
 
     changeStack: function ( model ) {
         this.model.set ( model.toJSON ( ) );
+        this.collection = new ItemListCollection ( [], { stack: model.get ( 'name' ) } );
+        this.collection.fetch ( );
         this.render ( );
     },
 
