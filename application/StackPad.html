@@ -7,15 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/main.css"          rel="stylesheet">
   </head>
   <body class="container-fluid">
 
-    <br>
-
     <div class="row">
-      <div id="stacklist-container" class="col-xs-3 container-fluid"></div>
-      <div id="itemlist-container" class="col-xs-3"></div>
-      <div id="entrylist-container" class="col-xs-3"></div>
+      <div id="stacklist-container" class=""></div>
+      <div id="itemlist-container"  class="hide"></div>
+      <div id="entrylist-container" class="hide"></div>
     </div>
 
     <!-- APPLICATION TEMPLATE START-->
@@ -34,21 +33,32 @@
     <!-- STACK TEMPLATES STARTS -->
     <script type="text/template" id="template-stacklist">
       <div>
-        <div class="form-group">
-          <input id="name" type="text" class="form-control" placeholder="Name" />
-        </div>
-        <div class="form-group">
-          <textarea id="description" class="form-control" rows="2" placeholder="Description"></textarea>
-        </div>
-        <div class="form-group">
-          <button class="add btn btn-primary btn-block">Add Stack</button>
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+            <div class="navbar-header"><div class="navbar-brand">StackList</div></div>
+
+            <ul class="nav navbar-nav navbar-right">
+              <li><a class="app-toggle-add" href="#"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="app-section-addstack hide">
+          <div class="form-group">
+            <input id="name" type="text" class="form-control" placeholder="Name" />
+          </div>
+          <div class="form-group">
+            <textarea id="description" class="form-control" rows="2" placeholder="Description"></textarea>
+          </div>
+          <div class="form-group">
+            <button class="app-add btn btn-primary btn-block">Add Stack</button>
+          </div>
         </div>
       </div>
 
       <hr/>
 
-      <div id="list" class="list-group">
-      </div>
+      <div id="list" class="list-group"></div>
     </script>
 
     <script type="text/template" id="template-stack">
@@ -60,18 +70,39 @@
     <!-- ITEM TEMPLATES STARTS -->
     <script type="text/template" id="template-itemlist">
       <div>
-        <div class="form-group">
-          <input id="name" type="text" class="form-control" placeholder="Name" />
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+
+            <div class="navbar-header">
+              <div class="navbar-brand">
+                <a class="app-return" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
+              </div>
+            </div>
+
+            <ul class="nav navbar-nav navbar-left">
+              <li><a>{{ name }}</a></li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+              <li><a class="app-toggle-add" href="#"><span class="glyphicon glyphicon-plus"></span></a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <div class="app-section-additem hide">
+          <div class="form-group">
+            <input id="name" type="text" class="form-control" placeholder="Name" />
+          </div>
+          <div class="form-group">
+            <button class="app-add btn btn-primary btn-block">Add Item</button>
+          </div>
         </div>
-        <div class="form-group">
-          <button class="add btn btn-primary btn-block">Add Item</button>
-        </div>
+
       </div>
 
       <hr/>
 
-      <div id="list" class="list-group">
-      </div>
+      <div id="list" class="list-group"></div>
     </script>
 
     <script type="text/template" id="template-item">
@@ -83,8 +114,28 @@
     <!-- ENTRY TEMPLATES STARTS -->
 
     <script type="text/template" id="template-entrylist">
+      <div>
+        <nav class="navbar navbar-default">
+          <div class="container-fluid">
+
+            <div class="navbar-header">
+              <div class="navbar-brand">
+                <a class="app-return" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
+              </div>
+            </div>
+
+            <ul class="nav navbar-nav navbar-left">
+              <li><a>{{ name }}</a></li>
+            </ul>
+
+          </div>
+        </nav>
+
       <button class="add btn btn-primary btn-block">Add Entry</button>
+
       <div id="list">
+      </div>
+
       </div>
     </script>
 

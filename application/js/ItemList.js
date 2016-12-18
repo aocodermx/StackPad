@@ -4,7 +4,11 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
+
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
+
+// Application components
+const Stack = require ( './StackList.js' );
 
 
 var ItemModel = Backbone.Model.extend ( {
@@ -14,6 +18,7 @@ var ItemModel = Backbone.Model.extend ( {
     }
 
 } );
+
 
 var ItemView = Backbone.View.extend ( {
 
@@ -44,11 +49,11 @@ var ItemView = Backbone.View.extend ( {
     },
 
     onClickItem: function ( event ) {
-        this.$el.toggleClass ( 'active' );
-        Backbone.trigger ( 'item:selected', this.model.get ( 'name' ) );
+        Backbone.trigger ( 'item:selected', this.model );
     }
 
 } );
+
 
 var ItemListCollection = Backbone.Collection.extend ( {
 
@@ -56,34 +61,22 @@ var ItemListCollection = Backbone.Collection.extend ( {
 
 } );
 
-exports.ListView = Backbone.View.extend ( {
+
+var ItemListView = Backbone.View.extend ( {
 
     el: '#itemlist-container',
 
     template: _.template ( $( '#template-itemlist' ).html ( ) ),
 
-    events: {
-        'click .add': 'onClickAdd'
-    },
+    model: Stack.Model,
 
-    initialize: function ( ) {
+    initialize: function ( options ) {
+        this.options = options || { };
         this.collection = new ItemListCollection ( );
     },
 
-    onClickAdd: function ( ) {
-        console.log ( 'Add New item' );
-        var name = this.$( '#name' ).val ( );
-
-        var newItem = new ItemModel ( {
-            name: name
-        } );
-
-        this.collection.add ( newItem );
-        this.render ( );
-    },
-
     render: function ( ) {
-        this.$el.html ( this.template ( { } ) );
+        this.$el.html ( this.template ( this.model.attributes ) );
 
         this.collection.each ( function ( item ) {
             var itemView = new ItemView ( { model: item } );
@@ -91,6 +84,42 @@ exports.ListView = Backbone.View.extend ( {
         }, this );
 
         return this;
+    },
+
+    changeStack: function ( model ) {
+        this.model.set ( model.toJSON ( ) );
+        this.render ( );
+    },
+
+    events: {
+        'click .app-return': 'onReturn',
+        'click .app-toggle-add': 'onToggleAdd',
+        'click .app-add': 'onClickAdd'
+    },
+
+    onReturn: function ( ) {
+        Backbone.trigger ( 'stack:unselected', this.model.get ( 'name' ) );
+    },
+
+    onToggleAdd: function ( ) {
+        this.$( '.app-section-additem' ).toggleClass ( 'hide' );
+        this.$( '.app-toggle-add .glyphicon' ).toggleClass ( 'glyphicon-plus glyphicon-remove' );
+    },
+
+    onClickAdd: function ( ) {
+        var name = this.$( '#name' ).val ( );
+
+        console.log ( 'Add New item', name );
+
+        var newItem = new ItemModel ( {
+            name: name
+        } );
+
+        this.collection.add ( newItem );
+        this.render ( );
     }
 
 } );
+
+exports.ListView = ItemListView;
+exports.Model    = ItemModel;

@@ -5,6 +5,7 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
+
 _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
 
@@ -48,11 +49,11 @@ var StackView = Backbone.View.extend ( {
     },
 
     onClickStack: function ( event ) {
-        this.$el.toggleClass ( 'active' );
-        Backbone.trigger ( 'stack:selected', this.model.get ( 'name' ) );
+        Backbone.trigger ( 'stack:selected', this.model );
     }
 
 } );
+
 
 var StackListCollection = Backbone.Collection.extend ( {
 
@@ -60,18 +61,36 @@ var StackListCollection = Backbone.Collection.extend ( {
 
 } );
 
-exports.ListView = Backbone.View.extend ( {
+
+var StackListView = Backbone.View.extend ( {
 
     el: '#stacklist-container',
 
     template: _.template ( $('#template-stacklist').html ( ) ),
 
-    events: {
-        'click .add': 'onClickAdd'
-    },
-
     initialize: function ( ) {
         this.collection = new StackListCollection ( );
+    },
+
+    render: function ( ) {
+        this.$el.html ( this.template ( {} ) );
+
+        this.collection.each ( function ( item ) {
+            var stackView = new StackView ( { model: item } );
+            this.$( '#list' ).append ( stackView.render().el );
+        }, this );
+
+        return this;
+    },
+
+    events: {
+        'click .app-toggle-add': 'onToggleAdd',
+        'click .app-add': 'onClickAdd'
+    },
+
+    onToggleAdd: function ( ) {
+        this.$( '.app-section-addstack' ).toggleClass ( 'hide' );
+        this.$( '.app-toggle-add .glyphicon' ).toggleClass ( 'glyphicon-plus glyphicon-remove' );
     },
 
     onClickAdd: function ( ) {
@@ -87,15 +106,7 @@ exports.ListView = Backbone.View.extend ( {
         this.render ( );
     },
 
-    render: function ( ) {
-        this.$el.html ( this.template ( {} ) );
-
-        this.collection.each ( function ( item ) {
-            var stackView = new StackView ( { model: item } );
-            this.$( '#list' ).append ( stackView.render().el );
-        }, this );
-
-        return this;
-    }
-
 } );
+
+exports.Model = StackModel;
+exports.ListView = StackListView;
