@@ -11,149 +11,124 @@
   </head>
   <body class="container-fluid">
 
-    <div class="row">
-      <div id="stacklist-container" class=""></div>
-      <div id="itemlist-container"  class="hide"></div>
-      <div id="entrylist-container" class="hide"></div>
-    </div>
+    <!--div class="row">
+      <div id="container"></div>
+    </div-->
 
-    <!-- APPLICATION TEMPLATE START-->
-
-    <script type="text/template" id="template-stackpad">
-      <div>
-        <p>Working from directory {{ home }}.</p>
-      </div>
-
-      <div id="stacklistview-container">
-
-      </div>
-    </script>
-    <!-- APPLICATION TEMPLATES ENDS -->
-
-    <!-- STACK TEMPLATES STARTS -->
-    <script type="text/template" id="template-stacklist">
-      <div>
+    <!-- CONTAINER STACK STARTS -->
+    <script type="text/template" id="template-container-stack">
+      <div id="container">
         <nav class="navbar navbar-default">
           <div class="container-fluid">
-            <div class="navbar-header"><div class="navbar-brand">StackList</div></div>
-
-            <ul class="nav navbar-nav navbar-right">
-              <li><a class="app-toggle-add" href="#"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-            </ul>
-          </div>
-        </nav>
-
-        <div class="app-section-addstack hide">
-          <div class="form-group">
-            <input id="name" type="text" class="form-control" placeholder="Name" />
-          </div>
-          <div class="form-group">
-            <textarea id="description" class="form-control" rows="2" placeholder="Description"></textarea>
-          </div>
-          <div class="form-group">
-            <button class="app-add btn btn-primary btn-block">Add Stack</button>
-          </div>
-        </div>
-      </div>
-
-      <hr/>
-
-      <div id="list" class="list-group"></div>
-    </script>
-
-    <script type="text/template" id="template-stack">
-      <h4 class="list-group-item-heading">{{ name }}</h4>
-      <p class="list-group-item-text">{{ description }}</p>
-    </script>
-    <!-- STACK TEMPLATES ENDS -->
-
-    <!-- ITEM TEMPLATES STARTS -->
-    <script type="text/template" id="template-itemlist">
-      <div>
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-
             <div class="navbar-header">
               <div class="navbar-brand">
-                <a class="app-return" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <a class="app-return hide" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
+                <%= path %>
               </div>
+
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-container" aria-expanded="false">
+                <span class="sr-only">New Container</span>
+                <span class="glyphicon glyphicon-briefcase"></span>
+              </button>
+              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-item" aria-expanded="false">
+                <span class="sr-only">New Item</span>
+                <span class="glyphicon glyphicon-plus"></span>
+              </button>
             </div>
 
-            <ul class="nav navbar-nav navbar-left">
-              <li><a>{{ name }}</a></li>
-            </ul>
-
-            <ul class="nav navbar-nav navbar-right">
-              <li><a class="app-toggle-add" href="#"><span class="glyphicon glyphicon-plus"></span></a></li>
+            <ul class="nav navbar-nav navbar-right collapse navbar-collapse">
+              <li>
+                <a role="button" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-item" href="#collapse-new-item">
+                  New Item <span class="glyphicon glyphicon-plus"></span>
+                </a>
+              </li>
+              <li>
+                <a role="button" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-container" href="#collapse-new-container">
+                  New Container <span class="glyphicon glyphicon-briefcase"></span>
+                </a>
+              </li>
             </ul>
           </div>
         </nav>
 
-        <div class="app-section-additem hide">
-          <div class="form-group">
-            <input id="name" type="text" class="form-control" placeholder="Name" />
+        <div id="dialogs" class="panel">
+          <div class="panel-collapse collapse" id="collapse-new-item">
+            <div class="panel-body form-horizontal">
+              <div class="form-group">
+                <label for="item-name" class="col-sm-2 control-label">Item: </label>
+                <div class="col-sm-5">
+                  <input id="item-name" type="text" class="form-control" placeholder="Name" />
+                </div>
+                <label for="item-type" class="col-sm-1 control-label">Type: </label>
+                <div class="col-sm-2">
+                  <select id="item-type" class="form-control">
+                    <option>Plain Text</option>
+                    <option>...</option>
+                  </select>
+                </div>
+                <div class="col-sm-2">
+                  <button class="app-add-item btn btn-primary btn-block">Add Item</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <button class="app-add btn btn-primary btn-block">Add Item</button>
+
+          <div class="panel-collapse collapse" id="collapse-new-container">
+            <div class="panel-body form-horizontal">
+              <div class="form-group">
+                <label for="container-name" class="col-sm-2 control-label">Container: </label>
+                <div class="col-sm-5">
+                  <input id="container-name" type="text" class="form-control" placeholder="Name" />
+                </div>
+                <label for="container-type" class="col-sm-1 control-label">Type: </label>
+                <div class="col-sm-2">
+                  <select id="container-type" class="form-control">
+                    <option>Stack</option>
+                    <option>...</option>
+                  </select>
+                </div>
+                <div class="col-sm-2">
+                  <button class="app-add-container btn btn-primary btn-block">Add Container</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
+        <div id="items" class="row"></div>
       </div>
-
-      <hr/>
-
-      <div id="list" class="list-group"></div>
     </script>
+    <!-- CONTAINER STACK ENDS -->
 
+    <!-- ITEM TEMPLATE START -->
     <script type="text/template" id="template-item">
-      <p class="list-group-item-text">{{ name }}</p>
+      <div class="app-item">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><span class="glyphicon glyphicon-inbox"></span> <%= name %>
+              <% if ( typeof elements !== 'undefined' ) { %>
+              <span class="badge pull-right"><%= elements.size ( ) %></span>
+              <% } %>
+            </h3>
+          </div>
+          <!--div class="panel-body">
+            description
+          </div-->
+        </div>
+      </div>
     </script>
     <!-- ITEM TEMPLATES ENDS -->
 
 
-    <!-- ENTRY TEMPLATES STARTS -->
 
-    <script type="text/template" id="template-entrylist">
-      <div>
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-
-            <div class="navbar-header">
-              <div class="navbar-brand">
-                <a class="app-return" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
-              </div>
-            </div>
-
-            <ul class="nav navbar-nav navbar-left">
-              <li><a>{{ name }}</a></li>
-            </ul>
-
-          </div>
-        </nav>
-
-      <button class="add btn btn-primary btn-block">Add Entry</button>
-
-      <div id="list">
-      </div>
-
-      </div>
+    <!-- ITEMPLAINTEXT TEMPLATE STARTS -->
+    <script type="text/template" id="template-plain-text">
+      <div><%= content %></div>
     </script>
-
-    <script type="text/template" id="template-entry">
-      <br/>
-      <div class="form-group">
-        <input id="title" type="text" class="form-control" placeholder="Title" value="{{ title }}">
-      </div>
-      <div class="form-group">
-        <textarea id="description" class="form-control" placeholder="Body" rows="10"> {{ body }} </textarea>
-      </div>
-    </script>
-
-    <!-- ENTRY TEMPLATES ENDS -->
-    
+    <!-- ITEMPLAINTEXT TEMPLATE ENDS -->
 
 
-    <!-- APPLICATION COMPONENTS -->
+    <!-- APPLICATION JAVASCRIPT COMPONENTS -->
     <script>
       var jQuery = require ( 'jquery' ); // WTF!
     </script>

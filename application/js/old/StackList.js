@@ -22,20 +22,11 @@ var StackModel = Backbone.Model.extend ( {
 
 var StackView = Backbone.View.extend ( {
 
-    tagName: 'a',
+    tagName: 'div',
 
-    className: 'list-group-item',
-
-    attributes: {
-        href: '#'
-    },
+    className: 'col-sm-4',
 
     template: _.template ( $('#template-stack').html ( ) ),
-
-    events: {
-        'click h4': 'onClickStack',
-        'click p' : 'onClickStack'
-    },
 
     model: StackModel,
 
@@ -49,8 +40,19 @@ var StackView = Backbone.View.extend ( {
         return this;
     },
 
+    events: {
+        'click .panel': 'onClickStack',
+        'click span' : 'onClickTrash'
+    },
+
     onClickStack: function ( event ) {
         Backbone.trigger ( 'stack:selected', this.model );
+    },
+
+    onClickTrash: function ( event ) {
+        this.model.destroy ( );
+
+        event.stopImmediatePropagation ( );
     }
 
 } );
@@ -76,10 +78,16 @@ var StackListView = Backbone.View.extend ( {
     initialize: function ( ) {
         this.collection = new StackListCollection ( );
         this.collection.fetch ( );
+
+        this.listenTo ( this.collection, 'remove', this.onCollectionRemove );
     },
 
     render: function ( ) {
         this.$el.html ( this.template ( {} ) );
+
+        if ( this.collection.size ( ) == 0 ) {
+            this.onToggleAdd ( );
+        }
 
         this.collection.each ( function ( item ) {
             var stackView = new StackView ( { model: item } );
@@ -88,6 +96,10 @@ var StackListView = Backbone.View.extend ( {
         }, this );
 
         return this;
+    },
+
+    onCollectionRemove: function ( event ) {
+        this.render ( );
     },
 
     events: {

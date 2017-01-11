@@ -5,79 +5,70 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
-_.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
+// _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
-// Other dependencies
-const os   = require ( 'os' );
-const path = require ( 'path' );
 
 // Application components
-const Stack = require ( './js/StackList.js' );
-const Item  = require ( './js/ItemList.js' );
-const Entry = require ( './js/EntryList.js' );
-
+const Item      = require ( './js/Item.js' );
+const Container = require ( './js/Container.js' );
+const ItemPlainText = require ( './js/items/ItemPlainText.js' );
 
 var StackPadView = Backbone.View.extend ( {
 
     el: 'body',
 
-    template: _.template ( $( '#template-stackpad' ).html ( ) ),
+    template: _.template ( "" ),
 
     initialize: function ( options ) {
         this.options = options || { };
-        this.options.home = path.join ( os.homedir ( ), 'StackPad' );
+        // this.options.home = path.join ( os.homedir ( ), 'StackPad' );
 
-        // StackListView component.
-        this.stackListView = new Stack.ListView ( );
-        this.itemListView = new Item.ListView ( { model: new Stack.Model ( ) } );
-        this.entryListView = new Entry.ListView ( { model: new Item.Model ( ) } );
-        
-        Backbone.on ( 'stack:selected', this.onStackSelected, this );
-        Backbone.on ( 'stack:unselected', this.onStackUnselected, this );
+        this.containers = [];
+        this.containers.push ( new Container.View ( { model: new Container.Model ( ) } ) );
+
         Backbone.on ( 'item:selected', this.onItemSelected, this );
-        Backbone.on ( 'item:unselected', this.onItemUnselected, this );
+        Backbone.on ( 'container:closed', this.onContainerClosed, this );
 
-        this.render ( );  
+        this.render ( );
     },
 
     render: function ( ) {
-        this.stackListView.render ( );
-        this.itemListView.render ( );
-        this.entryListView.render ( );
+        // TODO: Logic to append containers instead of delete it.
+        // this.$el.append ( ... );
+        //     Option 1: set an specific id to the bootstrap collapse elements.
+        //     Option 2: implement collapse behaivour with backbone events.
+        var lastView = _.last ( this.containers );
 
-        console.log ( this.itemListView );
+        if ( typeof lastView !== 'undefined' ) {
+            this.$el.html ( lastView.render ( ).el );
+        }
+        
         return this;
     },
 
-    onStackSelected: function ( stack ) {
-        console.log ( 'Selected Stack:', stack.get ( 'name' ) , 'A new ItemListView should be created.' );
-        this.itemListView.changeStack ( stack );
-
-        this.$( '#stacklist-container' ).addClass ( 'hide' );
-        this.$( '#itemlist-container' ).removeClass ( 'hide' );
-    },
-
-    onStackUnselected: function ( stack ) {
-        console.log ( 'Unselected Stack:', stack, 'StacListView should become visible');        
-
-        this.$( '#stacklist-container' ).removeClass ( 'hide' );
-        this.$( '#itemlist-container' ).addClass ( 'hide' );
-    },
-
     onItemSelected: function ( item ) {
-        console.log ( 'Selected Item:', item.get ( 'name' ), 'A new EntryListView should be created.');
-        this.entryListView.changeItem ( item );
+        var itemView = null;
+        console.log ( item.get ( 'name' ), "will open", item, item.get( 'elements' ) );
 
-        this.$( '#itemlist-container' ).addClass ( 'hide' );
-        this.$( '#entrylist-container' ).removeClass ( 'hide' );
+        if ( typeof item.content !== 'undefined' ) {
+            itemModel = new ItemPlainText.Model ( item.attributes );
+            itemView = new ItemPlainText.View ( { model:itemModel } );
+        } else {
+            itemView = new Container.View ( {model : item } );
+        }
+
+        this.containers.push ( itemView );
+        this.render ( );
     },
 
-    onItemUnselected: function ( item ) {
-        console.log ( 'Unselected Item', item, 'ItemListView should become visible' );
+    onContainerClosed: function ( containerView ) {
+        console.log ( "Render parent view" );
+        containerView.remove ( );
+        this.containers.pop ( );
+        this.render ( );
 
-        this.$( '#itemlist-container' ).removeClass ( 'hide' );
-        this.$( '#entrylist-container' ).addClass ( 'hide' );
-    }
+        // Backbone.on ( 'container:closed', this.onContainerClosed, this );
+    },
 
 } );
 

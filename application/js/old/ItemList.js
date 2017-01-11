@@ -102,7 +102,6 @@ var ItemListView = Backbone.View.extend ( {
     events: {
         'click .app-return': 'onReturn',
         'click .app-toggle-add': 'onToggleAdd',
-        'click .app-add': 'onClickAdd'
     },
 
     onReturn: function ( ) {
