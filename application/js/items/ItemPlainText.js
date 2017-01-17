@@ -4,9 +4,6 @@ const $        = require ( 'jquery' );
 Backbone.$     = $;
 
 
-//_.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
-
-
 const Item = require ( '../Item.js' );
 
 var ItemPlainTextModel = Item.Model.extend ( {
@@ -25,7 +22,7 @@ var ItemPlainTextView = Backbone.View.extend ( {
 
     tagName: 'div',
 
-    className: 'plain-text-view',
+    className: 'row',
 
     template: _.template ( $( '#template-plain-text' ).html ( ) ),
 
@@ -40,7 +37,17 @@ var ItemPlainTextView = Backbone.View.extend ( {
         this.$el.html ( this.template ( this.model.attributes ) );
         
         return this;
-    }
+    },
+    
+    events: {
+        'click .app-return'        : 'onReturn',
+    },
+
+    onReturn : function ( ) {
+        console.log ( "Item close selected" );
+        Backbone.trigger ( 'item:closed', this );
+        this.model.save ( );
+    },
 
 } );
 

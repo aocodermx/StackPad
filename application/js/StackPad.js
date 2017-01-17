@@ -5,13 +5,17 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
-// _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
-
 
 // Application components
 const Item      = require ( './js/Item.js' );
 const Container = require ( './js/Container.js' );
 const ItemPlainText = require ( './js/items/ItemPlainText.js' );
+
+var id_counter = 1;
+Backbone.sync = function(method, model) {
+  console.log("I've been passed " + method + " with " + JSON.stringify(model));
+  if(method === 'create'){ model.set('id', id_counter++); }
+};
 
 var StackPadView = Backbone.View.extend ( {
 
@@ -27,6 +31,7 @@ var StackPadView = Backbone.View.extend ( {
         this.containers.push ( new Container.View ( { model: new Container.Model ( ) } ) );
 
         Backbone.on ( 'item:selected', this.onItemSelected, this );
+        Backbone.on ( 'item:closed'  , this.onItemClosed  , this );
         Backbone.on ( 'container:closed', this.onContainerClosed, this );
 
         this.render ( );
@@ -48,16 +53,23 @@ var StackPadView = Backbone.View.extend ( {
 
     onItemSelected: function ( item ) {
         var itemView = null;
-        console.log ( item.get ( 'name' ), "will open", item, item.get( 'elements' ) );
+        console.log ( item.get ( 'name' ), "will open", item, item.get( 'type' ) );
 
-        if ( typeof item.content !== 'undefined' ) {
+        if ( item.get( 'type' ) === 'container' ) {
+            itemView = new Container.View ( {model : item } );
+        } else {
             itemModel = new ItemPlainText.Model ( item.attributes );
             itemView = new ItemPlainText.View ( { model:itemModel } );
-        } else {
-            itemView = new Container.View ( {model : item } );
         }
 
         this.containers.push ( itemView );
+        this.render ( );
+    },
+
+    onItemClosed: function ( itemView ) {
+        console.log ( "Render parent view" );
+        itemView.remove ( );
+        this.containers.pop ( );
         this.render ( );
     },
 

@@ -2,10 +2,6 @@ const Backbone = require ( 'backbone' );
 const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
-// Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
-
-
-// _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
 
 const Item = require ( './Item.js' );
@@ -15,7 +11,7 @@ const ItemPlainText = require ( './items/ItemPlainText.js' );
 var ContainerModel = Item.Model.extend ( {
 
     defaults : _.extend ( { }, Item.Model.prototype.defaults, {
-        type  : 'stack',
+        type  : 'container',
         groups: 1,
     } ),
 
@@ -77,16 +73,15 @@ var ContainerView = Backbone.View.extend ( {
 
     onAddItem : function ( ) {
         var itemName = this.$( '#item-name' ).val ( );
-        var itemType = this.$( '#item-type' ).val ( );
-        console.log ( "Add a new Item with name", itemName, "of type", itemType );
+        console.log ( "Add a new Item with name", itemName );
 
         var itemModel = new Item.Model ( {
             parent: this.model.get( 'path' ),
             name : itemName,
-            type : itemType,
         } );
 
         this.model.get ( 'elements' ).add ( itemModel );
+        this.model.save ( );
         this.render ( );
     },
 
@@ -102,6 +97,7 @@ var ContainerView = Backbone.View.extend ( {
         } );
 
         this.model.get ( 'elements' ).add ( aContainer );
+        this.model.save ( );
         this.render ( );
     },
 

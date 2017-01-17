@@ -4,6 +4,8 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
+Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
+
 // _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
 
 
@@ -13,7 +15,7 @@ Backbone.$     = $;
 var ItemModel = Backbone.Model.extend ( {
 
     defaults: {
-        parent: '.',
+        parent: '',
         name: 'StackPad',
     },
 
@@ -57,7 +59,9 @@ var ItemView = Backbone.View.extend ( {
 
 var ItemCollection = Backbone.Collection.extend ( { 
     
-    model: ItemModel
+    model: ItemModel,
+
+    localStorage: new Backbone.LocalStorage('items'),
 
 } );
 
