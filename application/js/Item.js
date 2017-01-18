@@ -14,9 +14,12 @@ Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
  */
 var ItemModel = Backbone.Model.extend ( {
 
+    urlRoot: '/item',
+
     defaults: {
         parent: '',
-        name: 'StackPad',
+        name: 'item',
+        type: 'container',
     },
 
     initialize: function ( ) {
@@ -61,7 +64,14 @@ var ItemCollection = Backbone.Collection.extend ( {
     
     model: ItemModel,
 
-    localStorage: new Backbone.LocalStorage('items'),
+    url: '/item',
+
+    // localStorage : new Backbone.LocalStorage( 'items' ),
+
+    setName : function ( name ) {
+        console.log ( 'New storage', name );
+        this.localStorage = new Backbone.LocalStorage( name );
+    }
 
 } );
 

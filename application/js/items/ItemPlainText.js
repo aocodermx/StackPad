@@ -4,6 +4,9 @@ const $        = require ( 'jquery' );
 Backbone.$     = $;
 
 
+Backbone.LocalStorage = require ( '../lib/backbone.localStorage.js' );
+
+
 const Item = require ( '../Item.js' );
 
 var ItemPlainTextModel = Item.Model.extend ( {
@@ -41,13 +44,23 @@ var ItemPlainTextView = Backbone.View.extend ( {
     
     events: {
         'click .app-return'        : 'onReturn',
+        'click .app-save'          : 'onSave',
     },
 
     onReturn : function ( ) {
         console.log ( "Item close selected" );
+        this.model.save ( {
+            'content' : this.$( '.form-control' ).val ( ),
+        } );
         Backbone.trigger ( 'item:closed', this );
-        this.model.save ( );
     },
+
+    onSave: function ( ) {
+        console.log ( this.$( '.form-control' ).val ( ) );
+        this.model.save ( {
+            'content' : this.$( '.form-control' ).val ( ),
+        } );
+    }
 
 } );
 

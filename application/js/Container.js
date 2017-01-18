@@ -3,12 +3,17 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
+Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
 
 const Item = require ( './Item.js' );
 const ItemPlainText = require ( './items/ItemPlainText.js' );
 
 
 var ContainerModel = Item.Model.extend ( {
+
+    urlRoot : '/container',
+
+    localStorage: new Backbone.LocalStorage("container"),
 
     defaults : _.extend ( { }, Item.Model.prototype.defaults, {
         type  : 'container',
@@ -17,7 +22,6 @@ var ContainerModel = Item.Model.extend ( {
 
     initialize : function ( ) {
         ContainerModel.__super__.initialize.apply ( this, arguments );
-        this.set ( 'elements', new Item.Collection ( ) );
     }
 
 } );
@@ -33,10 +37,14 @@ var ContainerView = Backbone.View.extend ( {
 
     template: _.template ( $('#template-container-stack').html ( ) ),
 
-    model: ContainerModel,
+    model: Item.Model,
 
     initialize: function ( options ) {
         this.options = options || { };
+
+        this.collection = new Item.Collection ( ),
+        this.collection.setName ( this.model.get ( 'name' ) );
+        this.collection.fetch ( );
         this.render ( );
     },
 
@@ -50,10 +58,15 @@ var ContainerView = Backbone.View.extend ( {
             this.$( '.app-return').addClass ( 'hide' );
         }
 
-        this.model.get ( 'elements' ).each ( function ( item, index ) {
-            var itemView = new Item.View ( { model: item } );
-            this.$( '#items' ).append ( itemView.render( ).el );
-        }, this );
+        console.log ( this.collection );
+
+        if ( this.collection.length != 0 ) {
+
+            this.collection.each ( function ( item, index ) {
+                var itemView = new Item.View ( { model: item } );
+                this.$( '#items' ).append ( itemView.render( ).el );
+            }, this );
+        }
 
         this.delegateEvents( );
 
@@ -73,15 +86,17 @@ var ContainerView = Backbone.View.extend ( {
 
     onAddItem : function ( ) {
         var itemName = this.$( '#item-name' ).val ( );
-        console.log ( "Add a new Item with name", itemName );
+        var itemType = this.$( '#item-type' ).val ( );
+        console.log ( "Add a new Item with name", itemName, itemType );
 
-        var itemModel = new Item.Model ( {
+        var itemModel = new ItemPlainText.Model ( {
             parent: this.model.get( 'path' ),
             name : itemName,
+            type: itemType,
         } );
 
-        this.model.get ( 'elements' ).add ( itemModel );
-        this.model.save ( );
+        this.collection.add ( itemModel );
+        itemModel.save ( );
         this.render ( );
     },
 
@@ -90,14 +105,14 @@ var ContainerView = Backbone.View.extend ( {
         var containerType = this.$( '#container-type' ).val ( );
         console.log ( "Add a new Container with name", containerName, "of type", containerType );
 
-        var aContainer = new ContainerModel ( {
+        var aContainer = new Item.Model ( {
             parent: this.model.get( 'path' ),
             name : containerName,
-            type : containerType,
+            type : 'container',
         } );
 
-        this.model.get ( 'elements' ).add ( aContainer );
-        this.model.save ( );
+        this.collection.add ( aContainer );
+        aContainer.save ( );
         this.render ( );
     },
 

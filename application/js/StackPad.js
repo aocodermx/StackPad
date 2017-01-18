@@ -6,16 +6,17 @@ const $        = require ( 'jquery' );
 Backbone.$     = $;
 
 
+Backbone.LocalStorage = require ( './js/lib/backbone.localStorage.js' );
+
+
 // Application components
 const Item      = require ( './js/Item.js' );
 const Container = require ( './js/Container.js' );
 const ItemPlainText = require ( './js/items/ItemPlainText.js' );
 
-var id_counter = 1;
-Backbone.sync = function(method, model) {
-  console.log("I've been passed " + method + " with " + JSON.stringify(model));
-  if(method === 'create'){ model.set('id', id_counter++); }
-};
+
+// const LocalStorage = require("./lib/backbone.localStorage.js");
+
 
 var StackPadView = Backbone.View.extend ( {
 
@@ -27,13 +28,15 @@ var StackPadView = Backbone.View.extend ( {
         this.options = options || { };
         // this.options.home = path.join ( os.homedir ( ), 'StackPad' );
 
+        var rootItem = new Item.Model ( { name: 'StackPad', parent:'/', type:'container' } );
+
         this.containers = [];
-        this.containers.push ( new Container.View ( { model: new Container.Model ( ) } ) );
+        this.containers.push ( new Container.View ( { model: rootItem } ) );
 
         Backbone.on ( 'item:selected', this.onItemSelected, this );
         Backbone.on ( 'item:closed'  , this.onItemClosed  , this );
         Backbone.on ( 'container:closed', this.onContainerClosed, this );
-
+        
         this.render ( );
     },
 
@@ -53,13 +56,14 @@ var StackPadView = Backbone.View.extend ( {
 
     onItemSelected: function ( item ) {
         var itemView = null;
-        console.log ( item.get ( 'name' ), "will open", item, item.get( 'type' ) );
 
         if ( item.get( 'type' ) === 'container' ) {
-            itemView = new Container.View ( {model : item } );
+            console.log ( 'container' );
+            itemView = new Container.View ( { model : item } );
         } else {
-            itemModel = new ItemPlainText.Model ( item.attributes );
-            itemView = new ItemPlainText.View ( { model:itemModel } );
+            console.log ( 'item' );
+            // itemModel = new ItemPlainText.Model ( item.attributes );
+            itemView = new ItemPlainText.View ( { model:item } );
         }
 
         this.containers.push ( itemView );
