@@ -53,7 +53,6 @@ var ItemView = Backbone.View.extend ( {
     },
 
     onItem: function ( ) {
-        console.log ( "Item selected", this.model.get( 'name' ) );
         Backbone.trigger ( 'item:selected', this.model );
     }
 
@@ -66,12 +65,13 @@ var ItemCollection = Backbone.Collection.extend ( {
 
     url: '/item',
 
+    comparator: 'type',
+
     // localStorage : new Backbone.LocalStorage( 'items' ),
 
     setName : function ( name ) {
-        console.log ( 'New storage', name );
         this.localStorage = new Backbone.LocalStorage( name );
-    }
+    },
 
 } );
 

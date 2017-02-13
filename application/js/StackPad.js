@@ -57,28 +57,30 @@ var StackPadView = Backbone.View.extend ( {
     onItemSelected: function ( item ) {
         var itemView = null;
 
-        if ( item.get( 'type' ) === 'container' ) {
-            console.log ( 'container' );
+        if ( item.get( 'type' ) === 0 ) {
             itemView = new Container.View ( { model : item } );
         } else {
-            console.log ( 'item' );
-            // itemModel = new ItemPlainText.Model ( item.attributes );
             itemView = new ItemPlainText.View ( { model:item } );
         }
 
         this.containers.push ( itemView );
         this.render ( );
+
+        console.log ( item.get ( 'type' ) );
+
+        if ( item.get ( 'type' ) == 1 ) {
+            console.log ( "Adjusting " );
+            itemView.adjustTextArea ( );
+        }
     },
 
     onItemClosed: function ( itemView ) {
-        console.log ( "Render parent view" );
         itemView.remove ( );
         this.containers.pop ( );
         this.render ( );
     },
 
     onContainerClosed: function ( containerView ) {
-        console.log ( "Render parent view" );
         containerView.remove ( );
         this.containers.pop ( );
         this.render ( );

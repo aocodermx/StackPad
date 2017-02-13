@@ -15,9 +15,10 @@ var ContainerModel = Item.Model.extend ( {
 
     localStorage: new Backbone.LocalStorage("container"),
 
-    defaults : _.extend ( { }, Item.Model.prototype.defaults, {
-        type  : 'container',
-        groups: 1,
+    defaults    : _.extend ( { }, Item.Model.prototype.defaults, {
+        type    : 'container',
+        groups  : 1,
+        elements: 0
     } ),
 
     initialize : function ( ) {
@@ -52,16 +53,12 @@ var ContainerView = Backbone.View.extend ( {
         this.$el.html ( this.template ( this.model.attributes ) );
 
         if ( this.model.get ( 'parent' ) !== '.' ) {
-            console.log ( this.model.get ( 'parent' ), this.model.get ( 'parent' ) !== '.' );
             this.$( '.app-return').removeClass ( 'hide' );
         } else {
             this.$( '.app-return').addClass ( 'hide' );
         }
-
-        console.log ( this.collection );
-
+        
         if ( this.collection.length != 0 ) {
-
             this.collection.each ( function ( item, index ) {
                 var itemView = new Item.View ( { model: item } );
                 this.$( '#items' ).append ( itemView.render( ).el );
@@ -74,20 +71,28 @@ var ContainerView = Backbone.View.extend ( {
     },
 
     events: {
-        'click .app-return'        : 'onReturn',
-        'click .app-add-item'      : 'onAddItem',
-        'click .app-add-container' : 'onAddContainer',
+        'click .app-toggle-add-item'      : 'onToggleAddItem',
+        'click .app-toggle-add-container' : 'onToggleAddContainer',
+        'click .app-return'             : 'onReturn',
+        'click .app-add-item'           : 'onAddItem',
+        'click .app-add-container'      : 'onAddContainer',
+    },
+
+    onToggleAddItem: function ( ) {
+        this.$( '#item-name' ).focus ( );
+    },
+
+    onToggleAddContainer: function ( ) {
+        this.$( '#container-name' ).focus ( );
     },
 
     onReturn : function ( ) {
-        console.log ( "Item closed selected" );
         Backbone.trigger ( 'container:closed', this );
     },
 
     onAddItem : function ( ) {
         var itemName = this.$( '#item-name' ).val ( );
         var itemType = this.$( '#item-type' ).val ( );
-        console.log ( "Add a new Item with name", itemName, itemType );
 
         var itemModel = new ItemPlainText.Model ( {
             parent: this.model.get( 'path' ),
@@ -95,24 +100,29 @@ var ContainerView = Backbone.View.extend ( {
             type: itemType,
         } );
 
+        this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );
         this.collection.add ( itemModel );
         itemModel.save ( );
+        this.model.save ( );
         this.render ( );
     },
 
     onAddContainer: function ( ) {
         var containerName = this.$( '#container-name' ).val ( );
         var containerType = this.$( '#container-type' ).val ( );
-        console.log ( "Add a new Container with name", containerName, "of type", containerType );
 
         var aContainer = new Item.Model ( {
             parent: this.model.get( 'path' ),
-            name : containerName,
-            type : 'container',
+            name  : containerName,
+            type  : 0,
+            groups: 1,
+            elements: 0,
         } );
-
+        
+        this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );
         this.collection.add ( aContainer );
         aContainer.save ( );
+        this.model.save ( );
         this.render ( );
     },
 

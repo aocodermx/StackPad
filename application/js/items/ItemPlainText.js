@@ -36,15 +36,36 @@ var ItemPlainTextView = Backbone.View.extend ( {
         this.render ( );
     },
 
+    adjustTextArea: function ( ) {
+        var textAreaRows   = 1;
+
+        this.$('.app-plain-text').attr ( 'rows', textAreaRows );
+        
+        var textAreaBottom = this.$( '.app-plain-text' )[0].getBoundingClientRect ( ).bottom;
+        var textAreaHeight = this.$( '.app-plain-text' )[0].getBoundingClientRect ( ).height;
+
+        while ( textAreaBottom < window.innerHeight - textAreaHeight ) {
+            textAreaRows += 1;
+            this.$('.app-plain-text').attr ( 'rows', textAreaRows );
+            textAreaBottom = this.$( '.app-plain-text' )[0].getBoundingClientRect ( ).bottom;
+        }
+    },
+
     render: function ( ) {
         this.$el.html ( this.template ( this.model.attributes ) );
-        
         return this;
     },
     
     events: {
-        'click .app-return'        : 'onReturn',
-        'click .app-save'          : 'onSave',
+        'click .app-return' : 'onReturn' ,
+        'click .app-save'   : 'onSave'   ,
+        'click .app-cut'    : 'onCut'    ,
+        'click .app-copy'   : 'onCopy'   ,
+        'click .app-paste'  : 'onPaste'  ,
+        'click .app-undo'   : 'onUndo'   ,
+        'click .app-redo'   : 'onRedo'   ,
+        'click .app-zoomin' : 'onZoomIn' ,
+        'click .app-zoomout': 'onZoomOut',
     },
 
     onReturn : function ( ) {
@@ -60,7 +81,45 @@ var ItemPlainTextView = Backbone.View.extend ( {
         this.model.save ( {
             'content' : this.$( '.form-control' ).val ( ),
         } );
-    }
+    },
+
+    onCut: function ( ) {
+        this.$( '.app-plain-text' ).focus ( );
+        document.execCommand ( 'cut' );
+    },
+
+    onCopy: function ( ) {
+        this.$( '.app-plain-text' ).focus ( );
+        document.execCommand ( 'copy' );
+    },
+
+    onPaste: function ( ) {
+        this.$( '.app-plain-text' ).focus ( );
+        document.execCommand ( 'paste' );
+    },
+
+    onUndo: function ( ) {
+        this.$( '.app-plain-text' ).focus ( );
+        document.execCommand ( 'undo' );
+    },
+
+    onRedo: function ( ) {
+        this.$( '.app-plain-text' ).focus ( );
+        document.execCommand ( 'redo' );
+    },
+
+    onZoomIn: function ( ) {
+        var size = parseInt ( this.$( '.app-plain-text' ).css ( 'font-size' ).split ( 'px' )[0] );
+        this.$( '.app-plain-text' ).css ( 'font-size', size + 2 + "px" );
+        this.adjustTextArea ( );
+    },
+
+    onZoomOut: function ( ) {
+        var size = parseInt ( this.$( '.app-plain-text' ).css ( 'font-size' ).split ( 'px' )[0] );
+        if ( size > 8 )
+            this.$( '.app-plain-text' ).css ( 'font-size', size - 2 + "px" );
+        this.adjustTextArea ( );
+    },
 
 } );
 
