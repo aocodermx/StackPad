@@ -30,8 +30,6 @@ var ContainerModel = Item.Model.extend ( {
 
 var ContainerView = Backbone.View.extend ( {
 
-    // el: '#container',
-
     tagName: 'div',
 
     className: 'row',
@@ -47,6 +45,13 @@ var ContainerView = Backbone.View.extend ( {
         this.collection.setName ( this.model.get ( 'name' ) );
         this.collection.fetch ( );
         this.render ( );
+    },
+
+    adjustArea: function ( context ) {
+        var containerMaxHeight = window.innerHeight - $("#container .panel-body")[0].getBoundingClientRect().top;
+
+        this.$('#container .panel-body').css ( 'max-height', containerMaxHeight - 1 );
+        console.log ( 'adjustArea', containerMaxHeight );
     },
 
     render: function ( ) {

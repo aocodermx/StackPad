@@ -30,9 +30,9 @@ var ItemModel = Backbone.Model.extend ( {
 
 var ItemView = Backbone.View.extend ( {
 
-    tagname: 'div',
+    tagname: 'li',
 
-    className: 'item col-sm-3',
+    className: 'item list-group-item',
 
     template: _.template ( $( '#template-item' ).html ( ) ),
 

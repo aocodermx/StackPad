@@ -25,7 +25,7 @@ var ItemPlainTextView = Backbone.View.extend ( {
 
     tagName: 'div',
 
-    className: 'row',
+    className: 'container-fluid',
 
     template: _.template ( $( '#template-plain-text' ).html ( ) ),
 
@@ -36,7 +36,7 @@ var ItemPlainTextView = Backbone.View.extend ( {
         this.render ( );
     },
 
-    adjustTextArea: function ( ) {
+    adjustArea: function ( ) {
         var textAreaRows   = 1;
 
         this.$('.app-plain-text').attr ( 'rows', textAreaRows );
@@ -111,14 +111,14 @@ var ItemPlainTextView = Backbone.View.extend ( {
     onZoomIn: function ( ) {
         var size = parseInt ( this.$( '.app-plain-text' ).css ( 'font-size' ).split ( 'px' )[0] );
         this.$( '.app-plain-text' ).css ( 'font-size', size + 2 + "px" );
-        this.adjustTextArea ( );
+        this.adjustArea ( );
     },
 
     onZoomOut: function ( ) {
         var size = parseInt ( this.$( '.app-plain-text' ).css ( 'font-size' ).split ( 'px' )[0] );
         if ( size > 8 )
             this.$( '.app-plain-text' ).css ( 'font-size', size - 2 + "px" );
-        this.adjustTextArea ( );
+        this.adjustArea ( );
     },
 
 } );

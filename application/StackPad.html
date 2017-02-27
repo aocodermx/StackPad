@@ -11,86 +11,78 @@
   </head>
   <body class="container-fluid">
 
-    <!--div class="row">
-      <div id="container"></div>
-    </div-->
+
+
+    <!-- CONTAINER STACKPAD STARTS -->
+    <script type="text/template" id="template-stackpad">
+      <div class="row">
+        <div id="app-container"  class="col-xs-5 col-md-4 col-lg-3 ">No Container</div>
+        <div id="app-content"    class="col-xs-7 col-md-8 col-lg-9">
+          <br/>
+          <div class="jumbotron text-center">
+            <h1>No item selected.</h1>
+          </div>
+        </div>
+      </div>
+    </script>
+    <!-- CONTAINER STACKPAD END -->
 
     <!-- CONTAINER STACK STARTS -->
     <script type="text/template" id="template-container-stack">
       <div id="container">
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <div class="navbar-header">
-              <div class="navbar-brand">
-                <% if ( parent != '/' ) { %>
-                  <a class="app-return hide" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
-                <% } %>
-                <%= name %>
-              </div>
 
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-container" aria-expanded="false">
-                <span class="sr-only">New Container</span>
-                <span class="glyphicon glyphicon-briefcase"></span>
-              </button>
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-item" aria-expanded="false">
-                <span class="sr-only">New Item</span>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <% if ( parent != '/' ) { %>
+              <a class="app-return hide" href="#"><span class="glyphicon glyphicon-chevron-left"></span></a>
+            <% } %>
+            <%= name %>
+
+            <div class="btn-group pull-right" role="group" aria-label="...">
+              <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-item" aria-expanded="true">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
+              <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-container" aria-expanded="true">
+                <span class="glyphicon glyphicon-briefcase"></span>
+              </button>
+              <button type="button" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-sort"></span>
+              </button>
+              <button type="button" class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-wrench"></span>
+              </button>
             </div>
-
-            <ul class="nav navbar-nav navbar-right collapse navbar-collapse">
-              <li>
-                <a class="app-toggle-add-item" role="button" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-item" href="#collapse-new-item">
-                  New Item <span class="glyphicon glyphicon-plus"></span>
-                </a>
-              </li>
-              <li>
-                <a class="app-toggle-add-container" role="button" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-container" href="#collapse-new-container">
-                  New Container <span class="glyphicon glyphicon-briefcase"></span>
-                </a>
-              </li>
-            </ul>
           </div>
-        </nav>
+          <div class="panel-body">
+            <p>Stack items</p>
 
-        <div id="dialogs" class="panel">
-          <div class="panel-collapse collapse" id="collapse-new-item">
-            <div class="panel-body form-horizontal">
-              <div class="form-group">
-                <label for="item-name" class="col-sm-2 control-label">Item: </label>
-                <div class="col-sm-5">
-                  <input id="item-name" type="text" class="form-control" placeholder="Name" />
+            <div id="dialogs" class="panel">
+              <div class="panel-collapse collapse" id="collapse-new-item">
+                <div class="panel-body form-horizontal">
+                  <div class="form-group">
+                    <input id="item-name" type="text" class="form-control" placeholder="Name" />
+                    <select id="item-type" class="form-control">
+                      <option value="1">Plain Text</option>
+                      <option value="2">...</option>
+                    </select>
+                    <button class="app-add-item btn btn-primary btn-block">Add Item</button>
+                  </div>
                 </div>
-                <label for="item-type" class="col-sm-1 control-label">Type: </label>
-                <div class="col-sm-2">
-                  <select id="item-type" class="form-control">
-                    <option value="1">Plain Text</option>
-                    <option value="2">...</option>
-                  </select>
-                </div>
-                <div class="col-sm-2">
-                  <button class="app-add-item btn btn-primary btn-block">Add Item</button>
+              </div>
+
+              <div class="panel-collapse collapse" id="collapse-new-container">
+                <div class="panel-body form-horizontal">
+                  <div class="form-group">
+                    <input id="container-name" type="text" class="form-control" placeholder="Name" />
+                    <button class="app-add-container btn btn-primary btn-block">Add Container</button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="panel-collapse collapse" id="collapse-new-container">
-            <div class="panel-body form-horizontal">
-              <div class="form-group">
-                <label for="container-name" class="col-sm-2 control-label">Container: </label>
-                <div class="col-sm-8">
-                  <input id="container-name" type="text" class="form-control" placeholder="Name" />
-                </div>
-                <div class="col-sm-2">
-                  <button class="app-add-container btn btn-primary btn-block">Add Container</button>
-                </div>
-              </div>
-            </div>
+            <ul id="items" class="list-group"></ul>
           </div>
         </div>
-
-        <div id="items" class="row"></div>
       </div>
     </script>
     <!-- CONTAINER STACK ENDS -->
@@ -98,22 +90,13 @@
     <!-- ITEM TEMPLATE START -->
     <script type="text/template" id="template-item">
       <div class="app-item">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">
-              <% if ( type == 0 ) { %>
-                <span class="glyphicon glyphicon-th-large"></span>
-                <span class="badge pull-right"><%= elements %></span>
-              <% } else if ( type == 1 ) { %>
-                <span class="glyphicon glyphicon-file"></span>
-              <% } else { console.log ( type ); } %>
-              <%= name %>
-            </h3>
-          </div>
-          <!--div class="panel-body">
-            description
-          </div-->
-        </div>
+        <% if ( type == 0 ) { %>
+          <span class="glyphicon glyphicon-th-large"></span>
+          <span class="badge pull-right"><%= elements %></span>
+        <% } else if ( type == 1 ) { %>
+          <span class="glyphicon glyphicon-file"></span>
+        <% } else { console.log ( type ); } %>
+        <%= name %>
       </div>
     </script>
     <!-- ITEM TEMPLATES ENDS -->
