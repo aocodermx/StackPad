@@ -39,10 +39,10 @@
             <%= name %>
 
             <div class="btn-group pull-right" role="group" aria-label="...">
-              <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-item" aria-expanded="true">
+              <button type="button" class="app-toggle-add-item btn btn-default btn-xs">
                 <span class="glyphicon glyphicon-plus"></span>
               </button>
-              <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#container" data-target="#collapse-new-container" aria-expanded="true">
+              <button type="button" class="app-toggle-add-container btn btn-default btn-xs">
                 <span class="glyphicon glyphicon-briefcase"></span>
               </button>
               <button type="button" class="btn btn-default btn-xs">
@@ -60,12 +60,14 @@
               <div class="panel-collapse collapse" id="collapse-new-item">
                 <div class="panel-body form-horizontal">
                   <div class="form-group">
-                    <input id="item-name" type="text" class="form-control" placeholder="Name" />
+                    <input id="item-name" type="text" class="form-control" placeholder="Item Name" />
+                    <br/>
                     <select id="item-type" class="form-control">
                       <option value="1">Plain Text</option>
                       <option value="2">...</option>
                     </select>
-                    <button class="app-add-item btn btn-primary btn-block">Add Item</button>
+                    <br/>
+                    <button class="app-add-item btn btn-primary btn-block">Add New Item</button>
                   </div>
                 </div>
               </div>
@@ -73,8 +75,9 @@
               <div class="panel-collapse collapse" id="collapse-new-container">
                 <div class="panel-body form-horizontal">
                   <div class="form-group">
-                    <input id="container-name" type="text" class="form-control" placeholder="Name" />
-                    <button class="app-add-container btn btn-primary btn-block">Add Container</button>
+                    <input id="container-name" type="text" class="form-control" placeholder="Container Name" />
+                    <br/>
+                    <button class="app-add-container btn btn-primary btn-block">Add New Container</button>
                   </div>
                 </div>
               </div>

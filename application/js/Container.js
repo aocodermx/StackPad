@@ -57,7 +57,7 @@ var ContainerView = Backbone.View.extend ( {
 
     render: function ( ) {
         this.model.set ( 'elements', this.collection.size ( ) );
-        
+
         this.$el.html ( this.template ( this.model.attributes ) );
 
         if ( this.model.get ( 'parent' ) !== '.' ) {
@@ -91,10 +91,14 @@ var ContainerView = Backbone.View.extend ( {
     },
 
     onToggleAddItem: function ( ) {
+        this.$( '.panel-collapse' ).collapse ( 'hide' );
+        this.$( '#collapse-new-item' ).collapse ( 'toggle' );
         this.$( '#item-name' ).focus ( );
     },
 
     onToggleAddContainer: function ( ) {
+        this.$( '.panel-collapse' ).collapse ( 'hide' );
+        this.$( '#collapse-new-container' ).collapse ( 'toggle' );
         this.$( '#container-name' ).focus ( );
     },
 
