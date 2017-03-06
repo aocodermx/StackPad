@@ -44,6 +44,7 @@ var ContainerView = Backbone.View.extend ( {
         this.collection = new Item.Collection ( ),
         this.collection.setName ( this.model.get ( 'name' ) );
         this.collection.fetch ( );
+
         this.render ( );
     },
 
@@ -55,6 +56,8 @@ var ContainerView = Backbone.View.extend ( {
     },
 
     render: function ( ) {
+        this.model.set ( 'elements', this.collection.size ( ) );
+        
         this.$el.html ( this.template ( this.model.attributes ) );
 
         if ( this.model.get ( 'parent' ) !== '.' ) {
@@ -73,6 +76,10 @@ var ContainerView = Backbone.View.extend ( {
         this.delegateEvents( );
 
         return this;
+    },
+
+    onItemDelete: function ( itemView ) {
+        console.log ( 'Delete', itemView );
     },
 
     events: {

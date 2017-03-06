@@ -92,9 +92,14 @@
       <div class="app-item">
         <% if ( type == 0 ) { %>
           <span class="glyphicon glyphicon-th-large"></span>
-          <span class="badge pull-right"><%= elements %></span>
+          <% if ( elements != 0 ) { %>
+            <span class="badge pull-right"><%= elements %></span>
+          <% } else { %>
+            <span class="app-item-delete glyphicon glyphicon-trash pull-right">  </span>
+          <% } %>
         <% } else if ( type == 1 ) { %>
           <span class="glyphicon glyphicon-file"></span>
+          <span class="app-item-delete glyphicon glyphicon-trash pull-right">  </span>
         <% } else { console.log ( type ); } %>
         <%= name %>
       </div>

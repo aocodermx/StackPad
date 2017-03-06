@@ -50,10 +50,17 @@ var ItemView = Backbone.View.extend ( {
 
     events: {
         'click .app-item'          : 'onItem',
+        'click .app-item-delete'   : 'onItemDelete',
     },
 
     onItem: function ( ) {
         Backbone.trigger ( 'item:selected', this.model );
+    },
+
+    onItemDelete: function ( event ) {
+        this.model.destroy ( );
+        this.remove ( );
+        event.stopPropagation()
     }
 
 } );
