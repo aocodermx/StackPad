@@ -45,16 +45,24 @@
               <button type="button" class="app-toggle-add-container btn btn-default btn-xs">
                 <span class="glyphicon glyphicon-briefcase"></span>
               </button>
-              <button type="button" class="btn btn-default btn-xs">
+              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="glyphicon glyphicon-sort"></span>
               </button>
               <button type="button" class="btn btn-default btn-xs">
                 <span class="glyphicon glyphicon-wrench"></span>
               </button>
+              <ul class="dropdown-menu">
+                <li><a class="app-sort-byname" href="#">By Name     </a></li>
+                <li><a href="#">By Date     </a></li>
+                <li><a href="#">By Colour   </a></li>
+                <li><a class="app-sort-bytype" href="#">By Type     </a></li>
+                <li role="separator" class="divider"></li>
+                <li><a class="app-sort-byelements" href="#">By Elements </a></li>
+                <li><a class="app-sort-bypriority" href="#">By Priority </a></li>
+              </ul>
             </div>
           </div>
           <div class="panel-body">
-            <p>Stack items</p>
 
             <div id="dialogs" class="panel">
               <div class="panel-collapse collapse" id="collapse-new-item">
@@ -81,6 +89,8 @@
                   </div>
                 </div>
               </div>
+
+              <p>Stack items</p>
             </div>
 
             <ul id="items" class="list-group"></ul>

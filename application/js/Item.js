@@ -17,9 +17,10 @@ var ItemModel = Backbone.Model.extend ( {
     urlRoot: '/item',
 
     defaults: {
-        parent: '',
-        name: 'item',
-        type: 'container',
+        parent  : '',
+        name    : 'item',
+        type    : 'container',
+        priority: 0,
     },
 
     initialize: function ( ) {
@@ -78,6 +79,34 @@ var ItemCollection = Backbone.Collection.extend ( {
 
     setName : function ( name ) {
         this.localStorage = new Backbone.LocalStorage( name );
+    },
+
+    sortStringBy: function ( field, asc ) {
+        this.comparator = function ( a, b ) {
+            var a = a.get ( field );
+            var b = b.get ( field );
+
+            if ( asc ) {
+                return a.localeCompare ( b );
+            } else {
+                return b.localeCompare ( a );
+            }
+        };
+        this.sort ( );
+    },
+
+    sortNumberBy: function ( field, asc ) {
+        this.comparator = function ( a, b ) {
+            var a = a.get ( field );
+            var b = b.get ( field );
+
+            if ( asc ) {
+                return a > b;
+            } else {
+                return a < b;
+            }
+        };
+        this.sort ( );
     },
 
 } );

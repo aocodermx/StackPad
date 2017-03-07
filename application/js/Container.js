@@ -85,9 +85,13 @@ var ContainerView = Backbone.View.extend ( {
     events: {
         'click .app-toggle-add-item'      : 'onToggleAddItem',
         'click .app-toggle-add-container' : 'onToggleAddContainer',
-        'click .app-return'             : 'onReturn',
-        'click .app-add-item'           : 'onAddItem',
-        'click .app-add-container'      : 'onAddContainer',
+        'click .app-return'               : 'onReturn',
+        'click .app-add-item'             : 'onAddItem',
+        'click .app-add-container'        : 'onAddContainer',
+        'click .app-sort-byname'          : 'onSortByName',
+        'click .app-sort-bytype'          : 'onSortByType',
+        'click .app-sort-byelements'      : 'onSortByElements',
+        'click .app-sort-bypriority'      : 'onSortByPriority',
     },
 
     onToggleAddItem: function ( ) {
@@ -141,6 +145,26 @@ var ContainerView = Backbone.View.extend ( {
         this.model.save ( );
         this.render ( );
     },
+
+    onSortByName: function ( ) {
+        this.collection.sortStringBy ( 'name', this.ascName = !this.ascName || false );
+        this.render ( );
+    },
+
+    onSortByType: function ( ) {
+        this.collection.sortNumberBy ( 'type', this.ascType = !this.ascType || false );
+        this.render ( );
+    },
+
+    onSortByElements: function ( ) {
+        this.collection.sortNumberBy ( 'elements', this.ascElements = !this.ascElements || false );
+        this.render ( );
+    },
+
+    onSortByPriority: function ( ) {
+        this.collection.sortNumberBy ( 'priority', this.ascPriority = !this.ascPriority || false );
+        this.render ( );
+    }
 
 } );
 
