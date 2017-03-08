@@ -18,6 +18,7 @@ var ContainerModel = Item.Model.extend ( {
     defaults    : _.extend ( { }, Item.Model.prototype.defaults, {
         type    : 'container',
         groups  : 1,
+        description: "Stack Items",
         elements: 0
     } ),
 
@@ -130,13 +131,15 @@ var ContainerView = Backbone.View.extend ( {
     onAddContainer: function ( ) {
         var containerName = this.$( '#container-name' ).val ( );
         var containerType = this.$( '#container-type' ).val ( );
+        var containerDesc = this.$( '#container-desc' ).val ( );
 
         var aContainer = new Item.Model ( {
-            parent: this.model.get( 'path' ),
-            name  : containerName,
-            type  : 0,
-            groups: 1,
-            elements: 0,
+            parent     : this.model.get( 'path' ),
+            name       : containerName,
+            description: containerDesc,
+            type       : 0,
+            groups     : 1,
+            elements   : 0,
         } );
         
         this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );

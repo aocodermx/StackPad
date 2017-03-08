@@ -28,7 +28,7 @@ var StackPadView = Backbone.View.extend ( {
         this.options = options || { };
         // this.options.home = path.join ( os.homedir ( ), 'StackPad' );
 
-        var rootItem = new Item.Model ( { name: 'StackPad', parent:'/', type:'container' } );
+        var rootItem = new Item.Model ( { name: 'StackPad', parent:'/', type:'container', description: "Stack Items" } );
 
         this.containers = [];
         this.containers.push ( new Container.View ( { model: rootItem } ) );

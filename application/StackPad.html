@@ -85,15 +85,23 @@
                   <div class="form-group">
                     <input id="container-name" type="text" class="form-control" placeholder="Container Name" />
                     <br/>
+                    <textarea id="container-desc" class="form-control" placeholder="Container Description (Optional)" maxlength=140 rows="3"></textarea>
+                    <br/>
                     <button class="app-add-container btn btn-primary btn-block">Add New Container</button>
                   </div>
                 </div>
               </div>
 
-              <p>Stack items</p>
+              <div> <%= description %> </div>
             </div>
 
             <ul id="items" class="list-group"></ul>
+
+            <% if ( elements == 0 ) {%>
+              <div class="jumbotron text-center">
+                No items added
+              </div>
+            <% } %>
           </div>
         </div>
       </div>
