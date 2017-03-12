@@ -93,6 +93,7 @@ var ContainerView = Backbone.View.extend ( {
         'click .app-sort-bytype'          : 'onSortByType',
         'click .app-sort-byelements'      : 'onSortByElements',
         'click .app-sort-bypriority'      : 'onSortByPriority',
+        'click .app-sort-bydate'          : 'onSortByDate',
     },
 
     onToggleAddItem: function ( ) {
@@ -119,6 +120,7 @@ var ContainerView = Backbone.View.extend ( {
             parent: this.model.get( 'path' ),
             name : itemName,
             type: itemType,
+            created: Date.now()
         } );
 
         this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );
@@ -140,6 +142,7 @@ var ContainerView = Backbone.View.extend ( {
             type       : 0,
             groups     : 1,
             elements   : 0,
+            created     : Date.now ( )
         } );
         
         this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );
@@ -167,7 +170,12 @@ var ContainerView = Backbone.View.extend ( {
     onSortByPriority: function ( ) {
         this.collection.sortNumberBy ( 'priority', this.ascPriority = !this.ascPriority || false );
         this.render ( );
-    }
+    },
+
+    onSortByDate: function ( ) {
+        this.collection.sortNumberBy ( 'created', this.ascCreated = !this.ascCreated || false );
+        this.render ( );
+    },
 
 } );
 

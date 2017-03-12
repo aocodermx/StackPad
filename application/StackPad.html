@@ -53,8 +53,7 @@
               </button>
               <ul class="dropdown-menu">
                 <li><a class="app-sort-byname" href="#">By Name     </a></li>
-                <li><a href="#">By Date     </a></li>
-                <li><a href="#">By Colour   </a></li>
+                <li><a class="app-sort-bydate" href="#">By Date     </a></li>
                 <li><a class="app-sort-bytype" href="#">By Type     </a></li>
                 <li role="separator" class="divider"></li>
                 <li><a class="app-sort-byelements" href="#">By Elements </a></li>
@@ -92,7 +91,9 @@
                 </div>
               </div>
 
-              <div> <%= description %> </div>
+              <div>
+                <%= description %>
+              </div>
             </div>
 
             <ul id="items" class="list-group"></ul>
@@ -111,18 +112,41 @@
     <!-- ITEM TEMPLATE START -->
     <script type="text/template" id="template-item">
       <div class="app-item">
-        <% if ( type == 0 ) { %>
-          <span class="glyphicon glyphicon-th-large"></span>
-          <% if ( elements != 0 ) { %>
-            <span class="badge pull-right"><%= elements %></span>
-          <% } else { %>
-            <span class="app-item-delete glyphicon glyphicon-trash pull-right">  </span>
-          <% } %>
-        <% } else if ( type == 1 ) { %>
-          <span class="glyphicon glyphicon-file"></span>
+        <div>
+          <span class="app-item-details glyphicon glyphicon-chevron-down">  </span>
+          <% if ( type == 0 ) { %>
+            <span class="glyphicon glyphicon-th-large"></span>
+          <% } else if ( type == 1 ) { %>
+            <span class="glyphicon glyphicon-file"></span>
+          <% } else { console.log ( type ); } %>
+          <strong> <%= name %> </strong>
           <span class="app-item-delete glyphicon glyphicon-trash pull-right">  </span>
-        <% } else { console.log ( type ); } %>
-        <%= name %>
+        </div>
+        <div class="item-details text-right collapse">
+          <table class="table">
+            <tr>
+              <td>Created</td>
+              <td><%= new Date( created ).toLocaleString ( ) %></td>
+            </tr>
+            <% if ( type == 0 ) { %>
+            <tr>
+              <td>Elements</td>
+              <td>
+                
+                  <%= elements %>
+              </td>
+            </tr>
+            <% } %>
+            <tr>
+              <td>Priority</td>
+              <td>
+                <span class="app-priority-inc glyphicon glyphicon-plus">  </span>
+                <%= priority %>
+                <span class="app-priority-dec glyphicon glyphicon-minus">  </span>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </script>
     <!-- ITEM TEMPLATES ENDS -->

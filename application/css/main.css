@@ -10,3 +10,7 @@
 #container .panel {
     margin-bottom: 0;
 }
+
+.item-details table {
+    margin: 0px;
+}

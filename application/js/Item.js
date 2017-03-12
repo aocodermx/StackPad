@@ -20,7 +20,9 @@ var ItemModel = Backbone.Model.extend ( {
         parent  : '',
         name    : 'item',
         type    : 'container',
+        created : 0,
         priority: 0,
+        collapse: true,
     },
 
     initialize: function ( ) {
@@ -50,8 +52,19 @@ var ItemView = Backbone.View.extend ( {
     },
 
     events: {
+        'click .app-item-details'  : 'onDetails',
         'click .app-item'          : 'onItem',
         'click .app-item-delete'   : 'onItemDelete',
+        'click .app-priority-inc'  : 'onItemPriorityIncrease',
+        'click .app-priority-dec'  : 'onItemPriorityDecrease',
+    },
+
+    onDetails: function ( event ) {
+        this.$( '.item-details' ).collapse ( 'toggle' );
+        this.$( '.app-item-details' ).toggleClass ( 'glyphicon-chevron-down' );
+        this.$( '.app-item-details' ).toggleClass ( 'glyphicon-chevron-up' );
+
+        event.stopPropagation ( );
     },
 
     onItem: function ( ) {
@@ -61,7 +74,19 @@ var ItemView = Backbone.View.extend ( {
     onItemDelete: function ( event ) {
         this.model.destroy ( );
         this.remove ( );
-        event.stopPropagation()
+        event.stopPropagation ( );
+    },
+
+    onItemPriorityIncrease: function ( event ) {
+        this.model.set ( 'priority', this.model.get ( 'priority' ) + 1 );
+        this.model.save ( );
+        event.stopPropagation ( );
+    },
+
+    onItemPriorityDecrease: function ( event ) {
+        this.model.set ( 'priority', this.model.get ( 'priority' ) - 1 );
+        this.model.save ( );
+        event.stopPropagation ( );
     }
 
 } );
