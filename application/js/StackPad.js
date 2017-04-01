@@ -1,21 +1,17 @@
 
-// Backbone dependency setup
+// Backbone and application dependency setup
 const Backbone = require ( 'backbone' );
 const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
-
-Backbone.LocalStorage = require ( './js/lib/backbone.localStorage.js' );
-
+const os       = require ( 'os');
 
 // Application components
-const Item      = require ( './js/Item.js' );
-const Container = require ( './js/Container.js' );
+const Item          = require ( './js/Item.js' );
+const Container     = require ( './js/Container.js' );
 const ItemPlainText = require ( './js/items/ItemPlainText.js' );
-
-
-// const LocalStorage = require("./lib/backbone.localStorage.js");
+const Persistance   = require ( './js/Persistance.js' );
 
 
 var StackPadView = Backbone.View.extend ( {
@@ -26,15 +22,25 @@ var StackPadView = Backbone.View.extend ( {
 
     initialize: function ( options ) {
         this.options = options || { };
-        // this.options.home = path.join ( os.homedir ( ), 'StackPad' );
 
-        var rootItem = new Item.Model ( { name: 'StackPad', parent:'/', type:'container', description: "Stack Items" } );
+        var rootItem = new Container.Model ( { 
+            name       : 'StackPad', 
+            description: 'Stack Items',
+            type       : 0, 
+            basedir    : os.homedir ( ),
+        } );
+
+        rootItem.fetch ( );
+
+        if ( rootItem.isNew ( ) ) {
+            rootItem.save ( );
+        }
 
         this.containers = [];
         this.containers.push ( new Container.View ( { model: rootItem } ) );
 
-        Backbone.on ( 'item:selected', this.onItemSelected, this );
-        Backbone.on ( 'item:closed'  , this.onItemClosed  , this );
+        Backbone.on ( 'item:selected'   , this.onItemSelected   , this );
+        Backbone.on ( 'item:closed'     , this.onItemClosed     , this );
         Backbone.on ( 'container:closed', this.onContainerClosed, this );
         $ ( window ).on ( 'resize', this.containers, this.onWindowResize );
         
@@ -61,8 +67,6 @@ var StackPadView = Backbone.View.extend ( {
     onItemSelected: function ( item ) {
         var itemView = null;
 
-        console.log ( 'Type selected:', item.get ( 'type' ) );
-
         if ( item.get( 'type' ) === 0 ) { // Render a container in the left panel
             itemView = new Container.View ( { model : item } );
             this.containers.push ( itemView );
@@ -77,7 +81,6 @@ var StackPadView = Backbone.View.extend ( {
 
     onItemClosed: function ( itemView ) {
         itemView.remove ( );
-        //this.containers.pop ( );
         this.render ( );
     },
 
@@ -85,8 +88,6 @@ var StackPadView = Backbone.View.extend ( {
         containerView.remove ( );
         this.containers.pop ( );
         this.render ( );
-
-        // Backbone.on ( 'container:closed', this.onContainerClosed, this );
     },
 
     onWindowResize: function ( event ) {

@@ -4,10 +4,10 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
-Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
+const Persistance = require ( './Persistance.js' );
+const path = require ( 'path' );
 
-// _.templateSettings = { interpolate : /\{\{(.+?)\}\}/g };
-
+Backbone.sync = Persistance.FileSystem;
 
 /*
  * ItemModel: Base clase for elements to be displayed in a list component.
@@ -17,16 +17,24 @@ var ItemModel = Backbone.Model.extend ( {
     urlRoot: '/item',
 
     defaults: {
-        parent  : '',
-        name    : 'item',
-        type    : 'container',
+        name    : 'a item',
+        type    : 1,
         created : 0,
         priority: 0,
         collapse: true,
+        basedir : '',
     },
 
     initialize: function ( ) {
-        this.set ( 'path', this.get ( 'parent' ) + '/' + this.get ( 'name' ) );
+        // this.set ( 'path', this.get ( 'parent' ) + '/' + this.get ( 'name' ) );
+    },
+
+    fspath: function ( ) {
+        return path.join ( this.get ( 'basedir' ), this.get ( 'name' ) );
+    },
+
+    fsfile: function ( ) {
+        return path.join ( this.get ( 'basedir' ), this.get ( 'name' ), 'meta.pad' );
     }
 
 } );
@@ -72,7 +80,8 @@ var ItemView = Backbone.View.extend ( {
     },
 
     onItemDelete: function ( event ) {
-        this.model.destroy ( );
+        console.log ( 'delete the item ', this.model, this.model.destroy ( ) );
+        //this.model.destroy ( );
         this.remove ( );
         event.stopPropagation ( );
     },
@@ -99,12 +108,6 @@ var ItemCollection = Backbone.Collection.extend ( {
     url: '/item',
 
     comparator: 'type',
-
-    // localStorage : new Backbone.LocalStorage( 'items' ),
-
-    setName : function ( name ) {
-        this.localStorage = new Backbone.LocalStorage( name );
-    },
 
     sortStringBy: function ( field, asc ) {
         this.comparator = function ( a, b ) {

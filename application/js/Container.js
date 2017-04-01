@@ -3,7 +3,10 @@ const _        = require ( 'underscore' );
 const $        = require ( 'jquery' );
 Backbone.$     = $;
 
-Backbone.LocalStorage = require ( './lib/backbone.localStorage.js' );
+const Persistance = require ( './Persistance.js' );
+
+Backbone.sync = Persistance.FileSystem;
+const path = require ( 'path' );
 
 const Item = require ( './Item.js' );
 const ItemPlainText = require ( './items/ItemPlainText.js' );
@@ -11,20 +14,21 @@ const ItemPlainText = require ( './items/ItemPlainText.js' );
 
 var ContainerModel = Item.Model.extend ( {
 
-    urlRoot : '/container',
-
-    localStorage: new Backbone.LocalStorage("container"),
-
     defaults    : _.extend ( { }, Item.Model.prototype.defaults, {
-        type    : 'container',
+        type    : 0,
         groups  : 1,
-        description: "Stack Items",
-        elements: 0
+        description: 'Stack Items',
+        elements: 0,
     } ),
 
     initialize : function ( ) {
         ContainerModel.__super__.initialize.apply ( this, arguments );
-    }
+        this.items = new Item.Collection ( );
+    },
+
+    fsfile: function ( ) {
+        return path.join ( this.get ( 'basedir' ), this.get ( 'name' ), 'stack.pad' );
+    },
 
 } );
 
@@ -37,14 +41,14 @@ var ContainerView = Backbone.View.extend ( {
 
     template: _.template ( $('#template-container-stack').html ( ) ),
 
-    model: Item.Model,
+    model: ContainerModel,
 
     initialize: function ( options ) {
         this.options = options || { };
 
-        this.collection = new Item.Collection ( ),
-        this.collection.setName ( this.model.get ( 'name' ) );
-        this.collection.fetch ( );
+        //this.collection = new Item.Collection ( ),
+        // Fix this
+        // this.collection.fetch ( );
 
         this.render ( );
     },
@@ -53,11 +57,10 @@ var ContainerView = Backbone.View.extend ( {
         var containerMaxHeight = window.innerHeight - $("#container .panel-body")[0].getBoundingClientRect().top;
 
         this.$('#container .panel-body').css ( 'max-height', containerMaxHeight - 1 );
-        console.log ( 'adjustArea', containerMaxHeight );
     },
 
     render: function ( ) {
-        this.model.set ( 'elements', this.collection.size ( ) );
+        // this.model.set ( 'elements', this.model.items.size ( ) );
 
         this.$el.html ( this.template ( this.model.attributes ) );
 
@@ -67,8 +70,8 @@ var ContainerView = Backbone.View.extend ( {
             this.$( '.app-return').addClass ( 'hide' );
         }
         
-        if ( this.collection.length != 0 ) {
-            this.collection.each ( function ( item, index ) {
+        if ( this.model.items.size ( ) != 0 ) {
+            this.model.items.each ( function ( item, index ) {
                 var itemView = new Item.View ( { model: item } );
                 this.$( '#items' ).append ( itemView.render( ).el );
             }, this );
@@ -117,14 +120,13 @@ var ContainerView = Backbone.View.extend ( {
         var itemType = this.$( '#item-type' ).val ( );
 
         var itemModel = new ItemPlainText.Model ( {
-            parent: this.model.get( 'path' ),
             name : itemName,
             type: itemType,
-            created: Date.now()
+            created: Date.now(),
+            basedir: this.model.fspath ( ),
         } );
 
-        this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );
-        this.collection.add ( itemModel );
+        this.model.items.add ( itemModel );
         itemModel.save ( );
         this.model.save ( );
         this.render ( );
@@ -135,45 +137,45 @@ var ContainerView = Backbone.View.extend ( {
         var containerType = this.$( '#container-type' ).val ( );
         var containerDesc = this.$( '#container-desc' ).val ( );
 
-        var aContainer = new Item.Model ( {
+        var aContainer = new ContainerModel ( {
             parent     : this.model.get( 'path' ),
             name       : containerName,
             description: containerDesc,
             type       : 0,
             groups     : 1,
             elements   : 0,
-            created     : Date.now ( )
+            created     : Date.now ( ),
+            basedir: this.model.fspath ( ),
         } );
         
-        this.model.set ( 'elements', this.model.get ( 'elements' ) + 1 );
-        this.collection.add ( aContainer );
+        this.model.items.add ( aContainer );
         aContainer.save ( );
         this.model.save ( );
         this.render ( );
     },
 
     onSortByName: function ( ) {
-        this.collection.sortStringBy ( 'name', this.ascName = !this.ascName || false );
+        this.model.items.sortStringBy ( 'name', this.ascName = !this.ascName || false );
         this.render ( );
     },
 
     onSortByType: function ( ) {
-        this.collection.sortNumberBy ( 'type', this.ascType = !this.ascType || false );
+        this.model.items.sortNumberBy ( 'type', this.ascType = !this.ascType || false );
         this.render ( );
     },
 
     onSortByElements: function ( ) {
-        this.collection.sortNumberBy ( 'elements', this.ascElements = !this.ascElements || false );
+        this.model.items.sortNumberBy ( 'elements', this.ascElements = !this.ascElements || false );
         this.render ( );
     },
 
     onSortByPriority: function ( ) {
-        this.collection.sortNumberBy ( 'priority', this.ascPriority = !this.ascPriority || false );
+        this.model.items.sortNumberBy ( 'priority', this.ascPriority = !this.ascPriority || false );
         this.render ( );
     },
 
     onSortByDate: function ( ) {
-        this.collection.sortNumberBy ( 'created', this.ascCreated = !this.ascCreated || false );
+        this.model.items.sortNumberBy ( 'created', this.ascCreated = !this.ascCreated || false );
         this.render ( );
     },
 

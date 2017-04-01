@@ -12,8 +12,7 @@
   "scripts": {
     "start": "electron .",
     "test": "mocha test",
-    "pack": "build --dir",
-    "dist": "build"
+    "dist": "electron-packager . --platform all --arch all --no-prune --out dist/ --overwrite"
   },
   "repository": "https://github.com/aocodermx/StackPad",
   "keywords": [

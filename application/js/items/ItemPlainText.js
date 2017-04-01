@@ -4,7 +4,9 @@ const $        = require ( 'jquery' );
 Backbone.$     = $;
 
 
-Backbone.LocalStorage = require ( '../lib/backbone.localStorage.js' );
+const Persistance = require ( '../Persistance.js' );
+
+Backbone.sync = Persistance.FileSystem;
 
 
 const Item = require ( '../Item.js' );
